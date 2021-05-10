@@ -4,7 +4,7 @@ sys.path.insert(0, "/home/apprenant/Documents/Brief-13-FoodFlix-NLP")
 import streamlit as st
 import pandas as pd 
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from sklearn.metrics.pairwise import linear_kernel
+from sklearn.metrics.pairwise import cosine_similarity
 from src.d01_data_processing.data_processing import final_stopwords_list, foodfacts
 
 @st.cache(allow_output_mutation=True)
@@ -18,7 +18,7 @@ def get_model(df, method):
 
 def get_results(model, X, user_input, number_similarity):
     user_matrix = model.transform([user_input])
-    cosine_similarities = linear_kernel(user_matrix, X)
+    cosine_similarities = cosine_similarity(user_matrix, X)
     results = {}
     similar_indices = cosine_similarities[0].argsort()[:-(number_similarity+1):-1]
     similar_items = [(cosine_similarities[0][i], foodfacts['id'][i]) for i in similar_indices]
